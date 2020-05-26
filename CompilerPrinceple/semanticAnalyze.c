@@ -94,7 +94,7 @@ struct codenode *merge(int num, ...)
     return h1;
 }
 //输出中间代码
-voidprnIR(struct codenode *head)
+void prnIR(struct codenode *head)
 {
     char opnstr1[32], opnstr2[32], resultstr[32];
     struct codenode *h = head;
@@ -174,12 +174,12 @@ voidprnIR(struct codenode *head)
         h = h->next;
     } while (h != head);
 }
-voidsemantic_error(int line, char *msg1, char *msg2)
+void semantic_error(int line, char *msg1, char *msg2)
 {
     //这里可以只收集错误信息，最后一次显示
     printf("在%d行,%s%s\n", line, msg1, msg2);
 }
-voidprn_symbol()
+void prn_symbol()
 { //显示符号表
     int i = 0;
     printf("%6s %6s %6s  %6s %4s %6s\n", "变量名", "别名", "层号", "类  型", "标记", "偏移量");
@@ -189,7 +189,7 @@ voidprn_symbol()
                symbolTable.symbols[i].type == INT ? "int" : "float",
                symbolTable.symbols[i].flag, symbolTable.symbols[i].offset);
 }
-intsearchSymbolTable(char *name)
+int searchSymbolTable(char *name)
 {
     int i, flag = 0;
     for (i = symbolTable.index - 1; i >= 0; i--)
@@ -203,7 +203,7 @@ intsearchSymbolTable(char *name)
     }
     return -1;
 }
-intfillSymbolTable(char *name, char *alias, int level, int type, char flag, int offset)
+int fillSymbolTable(char *name, char *alias, int level, int type, char flag, int offset)
 {
     //首先根据name查符号表，不能重复定义重复定义返回-1
     int i;
@@ -226,7 +226,7 @@ intfillSymbolTable(char *name, char *alias, int level, int type, char flag, int 
     return symbolTable.index++; //返回的是符号在符号表中的位置序号，中间代码生成时可用序号取到符号别名
 }
 //填写临时变量到符号表，返回临时变量在符号表中的位置
-intfill_Temp(char *name, int level, int type, char flag, int offset)
+int fill_Temp(char *name, int level, int type, char flag, int offset)
 {
     strcpy(symbolTable.symbols[symbolTable.index].name, "");
     strcpy(symbolTable.symbols[symbolTable.index].alias, name);
@@ -236,7 +236,7 @@ intfill_Temp(char *name, int level, int type, char flag, int offset)
     symbolTable.symbols[symbolTable.index].offset = offset;
     return symbolTable.index++; //返回的是临时变量在符号表中的位置序号
 }
-voidext_var_list(struct ASTNode *T)
+void ext_var_list(struct ASTNode *T)
 { //处理变量列表
     int rtn, num = 1;
     switch (T->kind)
@@ -291,7 +291,7 @@ int match_param(int i, struct ASTNode *T)
     }
     return 1;
 }
-voidboolExp(struct ASTNode *T)
+void boolExp(struct ASTNode *T)
 { //布尔表达式，参考文献[2]p84的思想
     struct opn opn1, opn2, result;
     int op;
@@ -370,7 +370,7 @@ voidboolExp(struct ASTNode *T)
         }
     }
 }
-voidExp(struct ASTNode *T)
+void Exp(struct ASTNode *T)
 { //处理基本表达式，参考文献[2]p82的思想
     int rtn, num, width;
     struct ASTNode *T0;
@@ -458,7 +458,8 @@ voidExp(struct ASTNode *T)
             //下面的类型属性计算，没有考虑错误处理情况
             if (T->ptr[0]->type == FLOAT || T->ptr[1]->type == FLOAT)
                 T->type = FLOAT, T->width = T->ptr[0]->width + T->ptr[1]->width + 4;
-            elseT->type = INT, T->width = T->ptr[0]->width + T->ptr[1]->width + 2;
+            else
+                T->type = INT, T->width = T->ptr[0]->width + T->ptr[1]->width + 2;
             T->place = fill_Temp(newTemp(), LEV, T->type, 'T', T->offset + T->ptr[0]->width + T->ptr[1]->width);
             opn1.kind = ID;
             strcpy(opn1.id, symbolTable.symbols[T->ptr[0]->place].alias);
@@ -541,7 +542,7 @@ voidExp(struct ASTNode *T)
         }
     }
 }
-voidsemantic_Analysis(struct ASTNode *T)
+void semantic_Analysis(struct ASTNode *T)
 { //对抽象语法树的先根遍历,按display的控制结构修改完成符号表管理和语义检查和TAC生成（语句部分）
     int rtn, num, width;
     struct ASTNode *T0;
@@ -850,7 +851,7 @@ voidsemantic_Analysis(struct ASTNode *T)
         }
     }
 }
-voidsemantic_Analysis0(struct ASTNode *T)
+void semantic_Analysis0(struct ASTNode *T)
 {
     symbolTable.index = 0;
     fillSymbolTable("read", "", 0, INT, 'F', 4);

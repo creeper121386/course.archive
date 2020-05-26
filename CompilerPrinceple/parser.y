@@ -39,7 +39,7 @@ void display(struct ASTNode *,int);
 /*以下为接在上述token后依次编码的枚举常量，作为AST结点类型标记*/
 %token PLUS MINUS STAR DIV MOD ASSIGNOP PLUS_ASSIGN_OP MINUS_ASSIGN_OP MULT_ASSIGN_OP DIV_ASSIGN_OP MOD_ASSIGN_OP AND OR NOT AUTOPLUS AUTOMINUS IF ELSE WHILE RETURN FOR CONTINUE BREAK SWITCH CASE DEFAULT COLON
 %token EXT_DEF_LIST EXT_VAR_DEF FUNC_DEF FUNC_DEC EXT_DEC_LIST PARAM_LIST PARAM_DEC VAR_DEF DEC_LIST DEF_LIST COMP_STM STM_LIST EXP_STMT IF_THEN IF_THEN_ELSE ARRAY_LIST ARRAY_ID
-%token FUNC_CALL ARGS FOR_DEC STRUCT_DEF STRUCT_NAME ACCESS_MEMBER
+%token FUNC_CALL ARGS FUNCTION PARAM ARG CALL LABEL GOTO JLT JLE JGT JGE EQ NEQ FOR_DEC STRUCT_DEF STRUCT_DEC STRUCT_NAME ACCESS_MEMBER
 %token SWITCH_STMT CASE_STMT DEFAULT_STMT CASE_STMT_LIST
 
 
@@ -57,8 +57,11 @@ void display(struct ASTNode *,int);
 %nonassoc ELSE
 
 %%
+// for exp1: 
+// program: ExtDefList    {printf("\n\033[1;32m==============\nProgram start:\n==============\n\033[0m\n语法树根节点Root\n");display($1,0);}     //显示语法树,语义分析
 
-program: ExtDefList    {printf("\n\033[1;32m==============\nProgram start:\n==============\n\033[0m\n语法树根节点Root\n");display($1,0);}     //显示语法树,语义分析
+// for exp2:
+program: ExtDefList    {printf("\n\033[1;32m==============\nProgram start:\n==============\n\033[0m\n");display($1,0);}     //显示语法树,语义分析
          ; 
 ExtDefList: {$$=NULL;}
           | ExtDef ExtDefList {$$=mknode(2,EXT_DEF_LIST,yylineno,$1,$2);}   //每一个EXTDEFLIST的结点，其第1棵子树对应一个外部变量声明或函数

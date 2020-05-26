@@ -6,8 +6,11 @@
 #define MAXLENGTH 200
 #define DX 3 * sizeof(int) /*活动记录控制信息需要的单元数，这个根据实际系统调整*/
 //以下语法树结点类型、三地址结点类型等定义仅供参考，实验时一定要根据自己的理解来定义
+
+
 int LEV; //层号
-struct opn
+struct opn      
+// 操作数结构定义，作为codenode的一部分。
 {
     int kind; //标识联合成员的属性
     int type; //标识操作数的数据类型
