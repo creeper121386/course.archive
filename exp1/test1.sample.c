@@ -9,8 +9,6 @@ int 1a, b, c; // line comment after code
 int d = 1;
 float e, f;
 
-
-
 char g = 'c', h;
 int array[10];
 string s;
@@ -61,5 +59,19 @@ int main()
     {
         // do nothing
     }
+
+    switch (i)
+    {
+    case 0:
+        i++;
+        break;
+    case 1:
+        i++;
+        break;
+    default:
+        printf("default case!");
+        break;
+    }
+
     return 1;
 }

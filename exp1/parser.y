@@ -25,7 +25,7 @@ void display(struct ASTNode *,int);
 };
 
 //  %type 定义非终结符的语义值类型
-%type  <ptr> program ExtDefList ExtDef  Specifier ExtDecList FuncDec CompSt VarList VarDec ParamDec Stmt StmList DefList Def DecList Dec Exp Args Arraylist ForDec StructSpecifier OptTag Tag
+%type  <ptr> program ExtDefList ExtDef  Specifier ExtDecList FuncDec CompSt VarList VarDec ParamDec Stmt StmList DefList Def DecList Dec Exp Args Arraylist CaseStmtList CaseStmt DefaultStmt ForDec StructSpecifier OptTag Tag
 
 //% token 定义终结符的语义值类型
 %token <type_int> INT              /*指定INT的语义值是type_int，有词法分析得到的数值*/
@@ -37,9 +37,11 @@ void display(struct ASTNode *,int);
 %token STRUCT
 %token DPLUS LP RP LC RC LB RB SEMI COMMA DOT     /*用bison对该文件编译时，带参数-d，生成的.tab.h中给这些单词进行编码，可在lex.l中包含parser.tab.h使用这些单词种类码*/
 /*以下为接在上述token后依次编码的枚举常量，作为AST结点类型标记*/
-%token PLUS MINUS STAR DIV MOD ASSIGNOP PLUS_ASSIGN_OP MINUS_ASSIGN_OP MULT_ASSIGN_OP DIV_ASSIGN_OP MOD_ASSIGN_OP AND OR NOT AUTOPLUS AUTOMINUS IF ELSE WHILE RETURN FOR CONTINUE BREAK
+%token PLUS MINUS STAR DIV MOD ASSIGNOP PLUS_ASSIGN_OP MINUS_ASSIGN_OP MULT_ASSIGN_OP DIV_ASSIGN_OP MOD_ASSIGN_OP AND OR NOT AUTOPLUS AUTOMINUS IF ELSE WHILE RETURN FOR CONTINUE BREAK SWITCH CASE DEFAULT COLON
 %token EXT_DEF_LIST EXT_VAR_DEF FUNC_DEF FUNC_DEC EXT_DEC_LIST PARAM_LIST PARAM_DEC VAR_DEF DEC_LIST DEF_LIST COMP_STM STM_LIST EXP_STMT IF_THEN IF_THEN_ELSE ARRAY_LIST ARRAY_ID
 %token FUNC_CALL ARGS FOR_DEC STRUCT_DEF STRUCT_NAME ACCESS_MEMBER
+%token SWITCH_STMT CASE_STMT DEFAULT_STMT CASE_STMT_LIST
+
 
 %left ASSIGNOP PLUS_ASSIGN_OP MINUS_ASSIGN_OP MULT_ASSIGN_OP DIV_ASSIGN_OP MOD_ASSIGN_OP
 %left OR
@@ -119,7 +121,25 @@ Stmt:   Exp SEMI    {$$=mknode(1,EXP_STMT,yylineno,$1);}
       | FOR LP ForDec RP Stmt {$$=mknode(2,FOR,yylineno,$3,$5);}
       | CONTINUE SEMI {$$=mknode(0,CONTINUE, yylineno);}
       | BREAK SEMI {$$=mknode(0,BREAK,yylineno);}
+      | SWITCH LP Exp RP LC CaseStmtList RC {$$=mknode(2, SWITCH_STMT, yylineno, $3, $6);}
       ;
+
+DefaultStmt: DEFAULT COLON StmList {$$=mknode(1, DEFAULT_STMT, yylineno, $3);}
+        ;
+
+CaseStmt: CASE INT COLON StmList {$$=mknode(1, CASE_STMT, yylineno, $4);$$->type_int=$2;$$->type=INT;}
+        | CASE CHAR COLON StmList {$$=mknode(1, CASE_STMT, yylineno, $4);$$->type_char=$2;$$->type=CHAR;}
+        ;
+
+CaseStmtList: 
+          {$$=NULL;}
+        | CaseStmt CaseStmtList {$$=mknode(2, CASE_STMT_LIST, yylineno, $1, $2);}
+        | DefaultStmt {$$=mknode(1, CASE_STMT_LIST, yylineno,$1);}
+        ;
+
+// CaseType: INT {$$=mknode(0,INT,yylineno);$$->type_int=$1;$$->type=INT;}
+//         | CHAR {$$=mknode(0,CHAR,yylineno);$$->type_char=$1;$$->type=CHAR;}
+//         ;
 
 ForDec: Exp SEMI Exp SEMI Exp {$$=mknode(3, FOR_DEC, yylineno, $1, $3, $5);}
       | SEMI Exp SEMI {$$=mknode(1,FOR_DEC, yylineno, $2);}

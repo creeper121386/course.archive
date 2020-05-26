@@ -86,31 +86,39 @@ extern int yydebug;
     FOR = 296,
     CONTINUE = 297,
     BREAK = 298,
-    EXT_DEF_LIST = 299,
-    EXT_VAR_DEF = 300,
-    FUNC_DEF = 301,
-    FUNC_DEC = 302,
-    EXT_DEC_LIST = 303,
-    PARAM_LIST = 304,
-    PARAM_DEC = 305,
-    VAR_DEF = 306,
-    DEC_LIST = 307,
-    DEF_LIST = 308,
-    COMP_STM = 309,
-    STM_LIST = 310,
-    EXP_STMT = 311,
-    IF_THEN = 312,
-    IF_THEN_ELSE = 313,
-    ARRAY_LIST = 314,
-    ARRAY_ID = 315,
-    FUNC_CALL = 316,
-    ARGS = 317,
-    FOR_DEC = 318,
-    STRUCT_DEF = 319,
-    STRUCT_NAME = 320,
-    ACCESS_MEMBER = 321,
-    UMINUS = 322,
-    LOWER_THEN_ELSE = 323
+    SWITCH = 299,
+    CASE = 300,
+    DEFAULT = 301,
+    COLON = 302,
+    EXT_DEF_LIST = 303,
+    EXT_VAR_DEF = 304,
+    FUNC_DEF = 305,
+    FUNC_DEC = 306,
+    EXT_DEC_LIST = 307,
+    PARAM_LIST = 308,
+    PARAM_DEC = 309,
+    VAR_DEF = 310,
+    DEC_LIST = 311,
+    DEF_LIST = 312,
+    COMP_STM = 313,
+    STM_LIST = 314,
+    EXP_STMT = 315,
+    IF_THEN = 316,
+    IF_THEN_ELSE = 317,
+    ARRAY_LIST = 318,
+    ARRAY_ID = 319,
+    FUNC_CALL = 320,
+    ARGS = 321,
+    FOR_DEC = 322,
+    STRUCT_DEF = 323,
+    STRUCT_NAME = 324,
+    ACCESS_MEMBER = 325,
+    SWITCH_STMT = 326,
+    CASE_STMT = 327,
+    DEFAULT_STMT = 328,
+    CASE_STMT_LIST = 329,
+    UMINUS = 330,
+    LOWER_THEN_ELSE = 331
   };
 #endif
 
@@ -130,7 +138,7 @@ union YYSTYPE
     char   struct_name[32];
     struct ASTNode *ptr;
 
-#line 134 "parser.tab.h" /* yacc.c:1909  */
+#line 142 "parser.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

@@ -53,10 +53,14 @@ LINE_COMMENT        \/\/[^\n]*
 "continue"      {printf("%-14s %s\n", "CONTINUE", yytext);return CONTINUE;}
 "break"         {printf("%-14s %s\n", "BREAK", yytext); return BREAK;}
 "struct"        {printf("%-14s %s\n", "STRUCT", yytext);return STRUCT;}
+"switch" 		{printf("%-14s %s)\n", "SWITCH", yytext);return SWITCH;}
+"case"   		{printf("%-14s %s)\n", "CASE", yytext);return CASE;}
+"default" 		{printf("%-14s %s)\n", "DEFAULT", yytext);return DEFAULT;}
 {ID}            {printf("%-14s %s\n", "ID", yytext); strcpy(yylval.type_id,  yytext); return ID;}
-{WRONGID}       {printf("\033[0;31mERR: ID format error. unexpected: %s\n\033[0m", yytext); strcpy(yylval.type_id,  yytext); return ID;}
+{WRONGID}       {printf("\033[0;31mERR: ID format error: ID can't start with number. unexpected: %s\n\033[0m", yytext); strcpy(yylval.type_id,  yytext); return ID;}
 ";"			    {printf("%-14s %s\n", "SEMI", yytext); return SEMI;}
 ","			    {printf("%-14s %s\n", "COMMA", yytext); return COMMA;}
+":"      		{printf("%-14s %s\n", "COLON", yytext);return COLON;}
 "="			    {printf("%-14s %s\n", "ASSIGNOP", yytext); return ASSIGNOP;}
 "+"			    {printf("%-14s %s\n", "PLUS", yytext); return PLUS;}
 "-"			    {printf("%-14s %s\n", "MINUS", yytext); return MINUS;}

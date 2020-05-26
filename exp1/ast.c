@@ -109,6 +109,28 @@ void display(struct ASTNode *T, int indent)
         case BREAK:
             printf("%*cBREAK语句：(%d)\n", indent, ' ', T->pos);
             break;
+        case SWITCH_STMT:
+            printf("%*cSWITCH语句：(%d)\n", indent, ' ', T->pos);
+            display(T->ptr[0], indent + 3);
+            display(T->ptr[1], indent + 3);
+            break;
+
+        case CASE_STMT_LIST:
+            display(T->ptr[0], indent);
+            display(T->ptr[1], indent);
+            break;
+
+        case CASE_STMT:
+            printf("%*cCASE语句：(%d)\n", indent, ' ', T->pos);
+            display(T->ptr[0], indent + 3);
+            display(T->ptr[1], indent + 3);
+            break;
+
+        case DEFAULT_STMT:
+            printf("%*cDEFAULT语句：(%d)\n", indent, ' ', T->pos);
+            display(T->ptr[0], indent + 3);
+            break;
+
         case IF_THEN:
             printf("%*cIF_THEN语句：(%d)\n", indent, ' ', T->pos);
             printf("%*c判断条件：\n", indent + 3, ' ');
