@@ -10,7 +10,14 @@
 #include "def.h"
 #include "parser.tab.h"
 
-#define DEBUG 1
+#define DEBUG
+
+/*
+ * ──────────────────────────────────────────────────────────────────────────────────── I ──────────
+ *   :::::: F O R   S E M A N T I C   A N A L Y S I S : : :  :   :    :     :        :          :
+ * ──────────────────────────────────────────────────────────────────────────────────────────────
+ */
+
 char *strcat0(char *s1, char *s2)
 {
     static char result[10];
@@ -22,21 +29,21 @@ char *newAlias()
 {
     static int no = 1;
     char s[10];
-    itoa(no++, s, 10);
+    sprintf(s, "%d", no++);
     return strcat0("v", s);
 }
 char *newLabel()
 {
     static int no = 1;
     char s[10];
-    itoa(no++, s, 10);
+    sprintf(s, "%d", no++);
     return strcat0("label", s);
 }
 char *newTemp()
 {
     static int no = 1;
     char s[10];
-    itoa(no++, s, 10);
+    sprintf(s, "%d", no++);
     return strcat0("temp", s);
 }
 //生成一条TAC代码的结点组成的双向循环链表，返回头指针
@@ -179,15 +186,40 @@ void semantic_error(int line, char *msg1, char *msg2)
     //这里可以只收集错误信息，最后一次显示
     printf("在%d行,%s%s\n", line, msg1, msg2);
 }
+
+void print_line(int len, int mode){
+    for (int i=0; i<len; i++)
+    if (mode == 2)
+        printf("═");
+    else if (mode == 1)
+        printf("─");
+    // printf("\n");
+}
+
 void prn_symbol()
 { //显示符号表
     int i = 0;
-    printf("%6s %6s %6s  %6s %4s %6s\n", "变量名", "别名", "层号", "类  型", "标记", "偏移量");
+    int line_len = 49;
+
+    printf("┌");
+    print_line(line_len-2, 1);
+    printf("┐\n");
+    printf("│ %-10s %-6s %-6s %-6s %-6s %-6s │\n", "Name", "Alias", "Level", "Type", "Tag", "Offset");
+
+    printf("├");
+    print_line(line_len-2, 1);
+    printf("┤\n");
+
     for (i = 0; i < symbolTable.index; i++)
-        printf("%6s %6s %6d  %6s %4c%6d\n", symbolTable.symbols[i].name,
+        printf("│ %-10s %-6s %-6d %-6s %-6c %-6d │\n", symbolTable.symbols[i].name,
                symbolTable.symbols[i].alias, symbolTable.symbols[i].level,
                symbolTable.symbols[i].type == INT ? "int" : "float",
                symbolTable.symbols[i].flag, symbolTable.symbols[i].offset);
+
+    printf("└");
+    print_line(line_len-2, 1);
+    printf("┘\n");
+
 }
 int searchSymbolTable(char *name)
 {
@@ -662,9 +694,9 @@ void semantic_Analysis(struct ASTNode *T)
                 T->width += T->ptr[1]->width;
                 T->code = merge(2, T->code, T->ptr[1]->code);
             }
-#if (DEBUG)
+#ifdef DEBUG
             prn_symbol(); //c在退出一个符合语句前显示的符号表
-            system("pause");
+            // system("pause");
 #endif
             LEV--;                                                         //出复合语句，层号减1
             symbolTable.index = symbol_scope_TX.TX[--symbol_scope_TX.top]; //删除该作用域中的符号
@@ -861,8 +893,11 @@ void semantic_Analysis0(struct ASTNode *T)
     fillSymbolTable("x", "", 1, INT, 'P', 12);
     symbol_scope_TX.TX[0] = 0; //外部变量在符号表中的起始序号为0
     symbol_scope_TX.top = 1;
+
     T->offset = 0; //外部变量在数据区的偏移量
     semantic_Analysis(T);
-    prnIR(T->code);
-    objectCode(T->code);
+
+    // generate IR:
+    // prnIR(T->code);
+    // objectCode(T->code);
 }

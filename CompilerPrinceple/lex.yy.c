@@ -381,15 +381,15 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[128] =
     {   0,
-        0,    0,   54,   52,   51,   50,   34,   52,   52,   52,
-       52,   35,   36,   30,   28,   25,   29,   41,   31,    3,
-       26,   24,   49,   27,   49,   22,   39,   40,   22,   22,
-       22,   22,   22,   22,   22,   22,   22,   37,   52,   38,
-       49,    0,    6,    0,   48,   32,    0,    0,   46,   42,
-       44,   43,   45,    4,    0,    1,   47,    4,    3,   23,
+        0,    0,   54,   52,   50,   49,   33,   52,   52,   52,
+       52,   34,   35,   29,   27,   24,   28,   40,   30,    3,
+       25,   23,   48,   26,   48,   22,   38,   39,   22,   22,
+       22,   22,   22,   22,   22,   22,   22,   36,   52,   37,
+       48,    0,    6,    0,   47,   31,    0,    0,   45,   41,
+       43,   42,   44,    4,    0,    1,   46,    4,    3,   51,
        22,   22,   22,   22,   22,   22,   22,   22,   22,   12,
-       22,   22,   22,   22,   22,   33,    5,    0,    0,    0,
-        1,   23,   22,   22,   22,   22,   22,   22,   22,   15,
+       22,   22,   22,   22,   22,   32,    5,    0,    0,    0,
+        1,   51,   22,   22,   22,   22,   22,   22,   22,   15,
         7,   22,   22,   22,   22,    2,   22,   20,    9,   22,
 
        22,   13,   22,   22,   22,   22,   22,   22,   17,   22,
@@ -539,7 +539,7 @@ static const flex_int32_t yy_rule_can_match_eol[54] =
     {   0,
 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,     };
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,     };
 
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
@@ -577,10 +577,12 @@ typedef union {
 } YYLVAL;
 #define YYSTYPE YYLVAL
 
-#line 581 "lex.yy.c"
+// #define DEBUG 1
+#define DEBUG 0
+#line 583 "lex.yy.c"
 /* 转义+任意字符 | 非单引号字符 | 不能出现单独的 \ */
 /* 同上，并允许长度为0~n */
-#line 584 "lex.yy.c"
+#line 586 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -797,9 +799,9 @@ YY_DECL
 		}
 
 	{
-#line 36 "lex.l"
+#line 38 "lex.l"
 
-#line 803 "lex.yy.c"
+#line 805 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -868,274 +870,274 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 37 "lex.l"
-{printf("%-14s %s\n", "LINECOMMENT", yytext);}
+#line 39 "lex.l"
+{if(DEBUG) printf("%-11s  %s\n", "LINECOMMENT", yytext);}
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 38 "lex.l"
-{printf("BLOCKCOMMENT:\n%s\n<BLOCKCOMMENT-END>\n", yytext);}
+#line 40 "lex.l"
+{if(DEBUG) printf("<BLOCKCOMMENT-START>\n%s\n<BLOCKCOMMENT-END>\n", yytext);}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 40 "lex.l"
-{printf("%-14s %s\n", "INT", yytext); yylval.type_int=atoi(yytext); return INT;}
+#line 42 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "INT", yytext, yylineno, yycolumn); yylval.type_int=atoi(yytext); return INT;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 41 "lex.l"
-{printf("%-14s %s\n", "FLOAT", yytext); yylval.type_float=atof(yytext); return FLOAT;}
+#line 43 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "FLOAT", yytext, yylineno, yycolumn); yylval.type_float=atof(yytext); return FLOAT;}
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 42 "lex.l"
-{printf("%-14s %s\n", "CHAR", yytext);yylval.type_char=yytext[1];return CHAR;}
+#line 44 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "CHAR", yytext, yylineno, yycolumn);yylval.type_char=yytext[1];return CHAR;}
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 43 "lex.l"
-{printf("%-14s %s\n", "STRING", yytext);strcpy(yylval.type_string,yytext);return STRING;}
+#line 45 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "STRING", yytext, yylineno, yycolumn);strcpy(yylval.type_string,yytext);return STRING;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 44 "lex.l"
-{printf("%-14s %s\n", "TYPE", yytext); strcpy(yylval.type_id, yytext);return TYPE;}
+#line 46 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "TYPE", yytext, yylineno, yycolumn); strcpy(yylval.type_id, yytext);return TYPE;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 45 "lex.l"
-{printf("%-14s %s\n", "TYPE", yytext); strcpy(yylval.type_id, yytext);return TYPE;}
+#line 47 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "TYPE", yytext, yylineno, yycolumn); strcpy(yylval.type_id, yytext);return TYPE;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 46 "lex.l"
-{printf("%-14s %s\n", "TYPE", yytext); strcpy(yylval.type_id, yytext);return TYPE;}
+#line 48 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "TYPE", yytext, yylineno, yycolumn); strcpy(yylval.type_id, yytext);return TYPE;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 47 "lex.l"
-{printf("%-14s %s\n", "TYPE", yytext); strcpy(yylval.type_id, yytext);return TYPE;}
+#line 49 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "TYPE", yytext, yylineno, yycolumn); strcpy(yylval.type_id, yytext);return TYPE;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 48 "lex.l"
-{printf("%-14s %s\n", "RETURN", yytext); return RETURN;}
+#line 50 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "RETURN", yytext, yylineno, yycolumn); return RETURN;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 49 "lex.l"
-{printf("%-14s %s\n", "IF", yytext); return IF;}
+#line 51 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "IF", yytext, yylineno, yycolumn); return IF;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 50 "lex.l"
-{printf("%-14s %s\n", "ELSE", yytext); return ELSE;}
+#line 52 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "ELSE", yytext, yylineno, yycolumn); return ELSE;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 51 "lex.l"
-{printf("%-14s %s\n", "WHILE", yytext); return WHILE;}
+#line 53 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "WHILE", yytext, yylineno, yycolumn); return WHILE;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 52 "lex.l"
-{printf("%-14s %s\n", "FOR", yytext); return FOR;}
+#line 54 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "FOR", yytext, yylineno, yycolumn); return FOR;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 53 "lex.l"
-{printf("%-14s %s\n", "CONTINUE", yytext);return CONTINUE;}
+#line 55 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "CONTINUE", yytext, yylineno, yycolumn);return CONTINUE;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 54 "lex.l"
-{printf("%-14s %s\n", "BREAK", yytext); return BREAK;}
+#line 56 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "BREAK", yytext, yylineno, yycolumn); return BREAK;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 55 "lex.l"
-{printf("%-14s %s\n", "STRUCT", yytext);return STRUCT;}
+#line 57 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "STRUCT", yytext, yylineno, yycolumn);return STRUCT;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 56 "lex.l"
-{printf("%-14s %s)\n", "SWITCH", yytext);return SWITCH;}
+#line 58 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "SWITCH", yytext, yylineno, yycolumn);return SWITCH;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 57 "lex.l"
-{printf("%-14s %s)\n", "CASE", yytext);return CASE;}
+#line 59 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "CASE", yytext, yylineno, yycolumn);return CASE;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 58 "lex.l"
-{printf("%-14s %s)\n", "DEFAULT", yytext);return DEFAULT;}
+#line 60 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "DEFAULT", yytext, yylineno, yycolumn);return DEFAULT;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 59 "lex.l"
-{printf("%-14s %s\n", "ID", yytext); strcpy(yylval.type_id,  yytext); return ID;}
+#line 61 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "ID", yytext, yylineno, yycolumn); strcpy(yylval.type_id,  yytext); return ID;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 60 "lex.l"
-{printf("\033[0;31mERR: ID format error: ID can't start with number. unexpected: %s\n\033[0m", yytext); strcpy(yylval.type_id,  yytext); return ID;}
+#line 62 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "SEMI", yytext, yylineno, yycolumn); return SEMI;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 61 "lex.l"
-{printf("%-14s %s\n", "SEMI", yytext); return SEMI;}
+#line 63 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "COMMA", yytext, yylineno, yycolumn); return COMMA;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 62 "lex.l"
-{printf("%-14s %s\n", "COMMA", yytext); return COMMA;}
+#line 64 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "COLON", yytext, yylineno, yycolumn);return COLON;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 63 "lex.l"
-{printf("%-14s %s\n", "COLON", yytext);return COLON;}
+#line 65 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "ASSIGNOP", yytext, yylineno, yycolumn); return ASSIGNOP;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 64 "lex.l"
-{printf("%-14s %s\n", "ASSIGNOP", yytext); return ASSIGNOP;}
+#line 66 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "PLUS", yytext, yylineno, yycolumn); return PLUS;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 65 "lex.l"
-{printf("%-14s %s\n", "PLUS", yytext); return PLUS;}
+#line 67 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "MINUS", yytext, yylineno, yycolumn); return MINUS;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 66 "lex.l"
-{printf("%-14s %s\n", "MINUS", yytext); return MINUS;}
+#line 68 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "STAR", yytext, yylineno, yycolumn); return STAR;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 67 "lex.l"
-{printf("%-14s %s\n", "STAR", yytext); return STAR;}
+#line 69 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "DIV", yytext, yylineno, yycolumn); return DIV;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 68 "lex.l"
-{printf("%-14s %s\n", "DIV", yytext); return DIV;}
+#line 70 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "AND", yytext, yylineno, yycolumn); return AND;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 69 "lex.l"
-{printf("%-14s %s\n", "AND", yytext); return AND;}
+#line 71 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "OR", yytext, yylineno, yycolumn); return OR;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 70 "lex.l"
-{printf("%-14s %s\n", "OR", yytext); return OR;}
+#line 72 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "NOT", yytext, yylineno, yycolumn); return NOT;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 71 "lex.l"
-{printf("%-14s %s\n", "NOT", yytext); return NOT;}
+#line 73 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "LP", yytext, yylineno, yycolumn); return LP;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 72 "lex.l"
-{printf("%-14s %s\n", "LP", yytext); return LP;}
+#line 74 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "RP", yytext, yylineno, yycolumn); return RP;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 73 "lex.l"
-{printf("%-14s %s\n", "RP", yytext); return RP;}
+#line 75 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "LC", yytext, yylineno, yycolumn); return LC;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 74 "lex.l"
-{printf("%-14s %s\n", "LC", yytext); return LC;}
+#line 76 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "RC", yytext, yylineno, yycolumn); return RC;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 75 "lex.l"
-{printf("%-14s %s\n", "RC", yytext); return RC;}
+#line 77 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "LB", yytext, yylineno, yycolumn);return LB;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 76 "lex.l"
-{printf("%-14s %s\n", "LB", yytext);return LB;}
+#line 78 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "LC", yytext, yylineno, yycolumn);return RB;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 77 "lex.l"
-{printf("%-14s %s\n", "LC", yytext);return RB;}
+#line 79 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "DOT", yytext, yylineno, yycolumn);return DOT;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 78 "lex.l"
-{printf("%-14s %s\n", "DOT", yytext);return DOT;}
+#line 80 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "AUTOPLUS", yytext, yylineno, yycolumn); return AUTOPLUS;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 79 "lex.l"
-{printf("%-14s %s\n", "AUTOPLUS", yytext); return AUTOPLUS;}
+#line 81 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "AUTOMINUS", yytext, yylineno, yycolumn); return AUTOMINUS;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 80 "lex.l"
-{printf("%-14s %s\n", "AUTOMINUS", yytext); return AUTOMINUS;}
+#line 82 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "PLUSASSIGN", yytext, yylineno, yycolumn); return PLUS_ASSIGN_OP;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 81 "lex.l"
-{printf("%-14s %s\n", "PLUSASSIGN", yytext); return PLUS_ASSIGN_OP;}
+#line 83 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "MINUSASSIGN", yytext, yylineno, yycolumn); return MINUS_ASSIGN_OP;}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 82 "lex.l"
-{printf("%-14s %s\n", "MINUSASSIGN", yytext); return MINUS_ASSIGN_OP;}
+#line 84 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "STARASSIGN", yytext, yylineno, yycolumn);return MULT_ASSIGN_OP;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 83 "lex.l"
-{printf("%-14s %s\n", "STARASSIGN", yytext);return MULT_ASSIGN_OP;}
+#line 85 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "DIVASSIGN", yytext, yylineno, yycolumn);return DIV_ASSIGN_OP;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 84 "lex.l"
-{printf("%-14s %s\n", "DIVASSIGN", yytext);return DIV_ASSIGN_OP;}
+#line 86 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "MODASSIGN", yytext, yylineno, yycolumn);return MOD_ASSIGN_OP;}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 85 "lex.l"
-{printf("%-14s %s\n", "MODASSIGN", yytext);return MOD_ASSIGN_OP;}
+#line 89 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "RELOP", yytext, yylineno, yycolumn); strcpy(yylval.type_id, yytext);;return RELOP;}
 	YY_BREAK
 case 49:
+/* rule 49 can match eol */
 YY_RULE_SETUP
-#line 86 "lex.l"
-{printf("%-14s %s\n", "RELOP", yytext); strcpy(yylval.type_id, yytext);;return RELOP;}
+#line 90 "lex.l"
+{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "ENDL", "\\n", yylineno, yycolumn); yycolumn=1;}   
 	YY_BREAK
 case 50:
-/* rule 50 can match eol */
 YY_RULE_SETUP
-#line 87 "lex.l"
-{printf("%-14s \\n\n", "ENDL"); yycolumn=1;}   
+#line 91 "lex.l"
+{}   
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 88 "lex.l"
-{}   
+#line 92 "lex.l"
+{printf("\033[0;31mERR: ID can't start with number. unexpected: %s in (%d, %d)\n\033[0m", yytext, yylineno, yycolumn); strcpy(yylval.type_id,  yytext); return ID;}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 90 "lex.l"
+#line 93 "lex.l"
 {printf("Error type A :Mysterious character \"%s\"\n\t at Line %d\n",yytext,yylineno);}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 91 "lex.l"
+#line 94 "lex.l"
 ECHO;
 	YY_BREAK
-#line 1139 "lex.yy.c"
+#line 1141 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2152,7 +2154,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 91 "lex.l"
+#line 94 "lex.l"
 
 
 // 和bison联用时，不需要这部分

@@ -19,6 +19,8 @@ typedef union {
 } YYLVAL;
 #define YYSTYPE YYLVAL
 
+// #define DEBUG 1
+#define DEBUG 0
 %}
 %option yylineno
 
@@ -34,60 +36,61 @@ LINE_COMMENT        \/\/[^\n]*
 
 
 %%
-{LINE_COMMENT}  {printf("%-14s %s\n", "LINECOMMENT", yytext);}
-\/\*(\s|\n|[^\/])*?\*\/ {printf("BLOCKCOMMENT:\n%s\n<BLOCKCOMMENT-END>\n", yytext);}
+{LINE_COMMENT}  {if(DEBUG) printf("%-11s  %s\n", "LINECOMMENT", yytext);}
+\/\*(\s|\n|[^\/])*?\*\/ {if(DEBUG) printf("<BLOCKCOMMENT-START>\n%s\n<BLOCKCOMMENT-END>\n", yytext);}
 
-{INT}           {printf("%-14s %s\n", "INT", yytext); yylval.type_int=atoi(yytext); return INT;}
-{FLOAT}         {printf("%-14s %s\n", "FLOAT", yytext); yylval.type_float=atof(yytext); return FLOAT;}
-{CHAR}          {printf("%-14s %s\n", "CHAR", yytext);yylval.type_char=yytext[1];return CHAR;}
-{STRING}        {printf("%-14s %s\n", "STRING", yytext);strcpy(yylval.type_string,yytext);return STRING;}
-"int"           {printf("%-14s %s\n", "TYPE", yytext); strcpy(yylval.type_id, yytext);return TYPE;}
-"float"         {printf("%-14s %s\n", "TYPE", yytext); strcpy(yylval.type_id, yytext);return TYPE;}
-"char"          {printf("%-14s %s\n", "TYPE", yytext); strcpy(yylval.type_id, yytext);return TYPE;}
-"string"        {printf("%-14s %s\n", "TYPE", yytext); strcpy(yylval.type_id, yytext);return TYPE;}
-"return"        {printf("%-14s %s\n", "RETURN", yytext); return RETURN;}
-"if"            {printf("%-14s %s\n", "IF", yytext); return IF;}
-"else"          {printf("%-14s %s\n", "ELSE", yytext); return ELSE;}
-"while"         {printf("%-14s %s\n", "WHILE", yytext); return WHILE;}
-"for"           {printf("%-14s %s\n", "FOR", yytext); return FOR;}
-"continue"      {printf("%-14s %s\n", "CONTINUE", yytext);return CONTINUE;}
-"break"         {printf("%-14s %s\n", "BREAK", yytext); return BREAK;}
-"struct"        {printf("%-14s %s\n", "STRUCT", yytext);return STRUCT;}
-"switch" 		{printf("%-14s %s)\n", "SWITCH", yytext);return SWITCH;}
-"case"   		{printf("%-14s %s)\n", "CASE", yytext);return CASE;}
-"default" 		{printf("%-14s %s)\n", "DEFAULT", yytext);return DEFAULT;}
-{ID}            {printf("%-14s %s\n", "ID", yytext); strcpy(yylval.type_id,  yytext); return ID;}
-{WRONGID}       {printf("\033[0;31mERR: ID format error: ID can't start with number. unexpected: %s\n\033[0m", yytext); strcpy(yylval.type_id,  yytext); return ID;}
-";"			    {printf("%-14s %s\n", "SEMI", yytext); return SEMI;}
-","			    {printf("%-14s %s\n", "COMMA", yytext); return COMMA;}
-":"      		{printf("%-14s %s\n", "COLON", yytext);return COLON;}
-"="			    {printf("%-14s %s\n", "ASSIGNOP", yytext); return ASSIGNOP;}
-"+"			    {printf("%-14s %s\n", "PLUS", yytext); return PLUS;}
-"-"			    {printf("%-14s %s\n", "MINUS", yytext); return MINUS;}
-"*"			    {printf("%-14s %s\n", "STAR", yytext); return STAR;}
-"/"			    {printf("%-14s %s\n", "DIV", yytext); return DIV;}
-"&&"            {printf("%-14s %s\n", "AND", yytext); return AND;}
-"||"            {printf("%-14s %s\n", "OR", yytext); return OR;}
-"!"			    {printf("%-14s %s\n", "NOT", yytext); return NOT;}
-"("			    {printf("%-14s %s\n", "LP", yytext); return LP;}
-")"			    {printf("%-14s %s\n", "RP", yytext); return RP;}
-"{"			    {printf("%-14s %s\n", "LC", yytext); return LC;}
-"}"			    {printf("%-14s %s\n", "RC", yytext); return RC;}
-"["             {printf("%-14s %s\n", "LB", yytext);return LB;}
-"]"             {printf("%-14s %s\n", "LC", yytext);return RB;}
-"."             {printf("%-14s %s\n", "DOT", yytext);return DOT;}
-"++"            {printf("%-14s %s\n", "AUTOPLUS", yytext); return AUTOPLUS;}
-"--"            {printf("%-14s %s\n", "AUTOMINUS", yytext); return AUTOMINUS;}
-"+="            {printf("%-14s %s\n", "PLUSASSIGN", yytext); return PLUS_ASSIGN_OP;}
-"-="            {printf("%-14s %s\n", "MINUSASSIGN", yytext); return MINUS_ASSIGN_OP;}
-"*="            {printf("%-14s %s\n", "STARASSIGN", yytext);return MULT_ASSIGN_OP;}
-"/="            {printf("%-14s %s\n", "DIVASSIGN", yytext);return DIV_ASSIGN_OP;}
-"%="            {printf("%-14s %s\n", "MODASSIGN", yytext);return MOD_ASSIGN_OP;}
-">"|"<"|">="|"<="|"=="|"!="   {printf("%-14s %s\n", "RELOP", yytext); strcpy(yylval.type_id, yytext);;return RELOP;}
-\n            {printf("%-14s \\n\n", "ENDL"); yycolumn=1;}   
-[ \r\t]         {}   
+{INT}           {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "INT", yytext, yylineno, yycolumn); yylval.type_int=atoi(yytext); return INT;}
+{FLOAT}         {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "FLOAT", yytext, yylineno, yycolumn); yylval.type_float=atof(yytext); return FLOAT;}
+{CHAR}          {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "CHAR", yytext, yylineno, yycolumn);yylval.type_char=yytext[1];return CHAR;}
+{STRING}        {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "STRING", yytext, yylineno, yycolumn);strcpy(yylval.type_string,yytext);return STRING;}
+"int"           {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "TYPE", yytext, yylineno, yycolumn); strcpy(yylval.type_id, yytext);return TYPE;}
+"float"         {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "TYPE", yytext, yylineno, yycolumn); strcpy(yylval.type_id, yytext);return TYPE;}
+"char"          {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "TYPE", yytext, yylineno, yycolumn); strcpy(yylval.type_id, yytext);return TYPE;}
+"string"        {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "TYPE", yytext, yylineno, yycolumn); strcpy(yylval.type_id, yytext);return TYPE;}
+"return"        {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "RETURN", yytext, yylineno, yycolumn); return RETURN;}
+"if"            {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "IF", yytext, yylineno, yycolumn); return IF;}
+"else"          {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "ELSE", yytext, yylineno, yycolumn); return ELSE;}
+"while"         {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "WHILE", yytext, yylineno, yycolumn); return WHILE;}
+"for"           {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "FOR", yytext, yylineno, yycolumn); return FOR;}
+"continue"      {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "CONTINUE", yytext, yylineno, yycolumn);return CONTINUE;}
+"break"         {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "BREAK", yytext, yylineno, yycolumn); return BREAK;}
+"struct"        {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "STRUCT", yytext, yylineno, yycolumn);return STRUCT;}
+"switch" 		{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "SWITCH", yytext, yylineno, yycolumn);return SWITCH;}
+"case"   		{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "CASE", yytext, yylineno, yycolumn);return CASE;}
+"default" 		{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "DEFAULT", yytext, yylineno, yycolumn);return DEFAULT;}
+{ID}            {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "ID", yytext, yylineno, yycolumn); strcpy(yylval.type_id,  yytext); return ID;}
+";"			    {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "SEMI", yytext, yylineno, yycolumn); return SEMI;}
+","			    {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "COMMA", yytext, yylineno, yycolumn); return COMMA;}
+":"      		{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "COLON", yytext, yylineno, yycolumn);return COLON;}
+"="			    {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "ASSIGNOP", yytext, yylineno, yycolumn); return ASSIGNOP;}
+"+"			    {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "PLUS", yytext, yylineno, yycolumn); return PLUS;}
+"-"			    {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "MINUS", yytext, yylineno, yycolumn); return MINUS;}
+"*"			    {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "STAR", yytext, yylineno, yycolumn); return STAR;}
+"/"			    {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "DIV", yytext, yylineno, yycolumn); return DIV;}
+"&&"            {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "AND", yytext, yylineno, yycolumn); return AND;}
+"||"            {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "OR", yytext, yylineno, yycolumn); return OR;}
+"!"			    {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "NOT", yytext, yylineno, yycolumn); return NOT;}
+"("			    {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "LP", yytext, yylineno, yycolumn); return LP;}
+")"			    {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "RP", yytext, yylineno, yycolumn); return RP;}
+"{"			    {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "LC", yytext, yylineno, yycolumn); return LC;}
+"}"			    {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "RC", yytext, yylineno, yycolumn); return RC;}
+"["             {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "LB", yytext, yylineno, yycolumn);return LB;}
+"]"             {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "LC", yytext, yylineno, yycolumn);return RB;}
+"."             {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "DOT", yytext, yylineno, yycolumn);return DOT;}
+"++"            {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "AUTOPLUS", yytext, yylineno, yycolumn); return AUTOPLUS;}
+"--"            {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "AUTOMINUS", yytext, yylineno, yycolumn); return AUTOMINUS;}
+"+="            {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "PLUSASSIGN", yytext, yylineno, yycolumn); return PLUS_ASSIGN_OP;}
+"-="            {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "MINUSASSIGN", yytext, yylineno, yycolumn); return MINUS_ASSIGN_OP;}
+"*="            {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "STARASSIGN", yytext, yylineno, yycolumn);return MULT_ASSIGN_OP;}
+"/="            {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "DIVASSIGN", yytext, yylineno, yycolumn);return DIV_ASSIGN_OP;}
+"%="            {if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "MODASSIGN", yytext, yylineno, yycolumn);return MOD_ASSIGN_OP;}
 
-.       {printf("Error type A :Mysterious character \"%s\"\n\t at Line %d\n",yytext,yylineno);}
+
+">"|"<"|">="|"<="|"=="|"!="   	{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "RELOP", yytext, yylineno, yycolumn); strcpy(yylval.type_id, yytext);;return RELOP;}
+\n            					{if(DEBUG) printf("%-11s  │  %-10s  at (%d, %d)\n", "ENDL", "\\n", yylineno, yycolumn); yycolumn=1;}   
+[ \r\t]         				{}   
+{WRONGID}       				{printf("\033[0;31mERR: ID can't start with number. unexpected: %s in (%d, %d)\n\033[0m", yytext, yylineno, yycolumn); strcpy(yylval.type_id,  yytext); return ID;}
+.       						{printf("Error type A :Mysterious character \"%s\"\n\t at Line %d\n",yytext,yylineno);}
 %%
 
 // 和bison联用时，不需要这部分

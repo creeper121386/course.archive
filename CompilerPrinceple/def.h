@@ -7,9 +7,11 @@
 #define DX 3 * sizeof(int) /*活动记录控制信息需要的单元数，这个根据实际系统调整*/
 //以下语法树结点类型、三地址结点类型等定义仅供参考，实验时一定要根据自己的理解来定义
 
-
-int LEV; //层号
-struct opn      
+//
+// ─── FOR CODE GENERATION ────────────────────────────────────────────────────────
+//
+int LEV; //表示当前层号
+struct opn
 // 操作数结构定义，作为codenode的一部分。
 {
     int kind; //标识联合成员的属性
@@ -31,6 +33,9 @@ struct codenode
     struct codenode *next, *prior;
 };
 
+//
+// ─── FOR AST ────────────────────────────────────────────────────────────────────
+//
 struct ASTNode
 {
     //以下对结点属性定义没有考虑存储效率，只是简单地列出要用到的一些属性
@@ -57,6 +62,9 @@ struct ASTNode
     int num;                    //计数器，可以用来统计形参个数
 };
 
+//
+// ─── FOR SEMANTIC ANALYSIS ──────────────────────────────────────────────────────
+//
 struct symbol
 {                   //这里只列出了一个符号表项的部分属性，没考虑属性间的互斥
     char name[33];  //变量或函数名
@@ -69,18 +77,20 @@ struct symbol
                     //或记录函数活动记录大小，目标代码生成时使用
     //函数入口等实验可能会用到的属性...
 };
+
 //符号表
 struct symboltable
 {
     struct symbol symbols[MAXLENGTH];
-    int index;
+    int index;      // to indicate the top of stack.
 } symbolTable;
 
+// 作用域栈
 struct symbol_scope_begin
 {
     //当前作用域的符号在符号表的起始位置序号,这是一个栈结构,当使用顺序表作为符号表时，进入、退出一个作用域时需要对其操作，以完成符号表的管理。对其它形式的符号表，不一定需要此数据结构
     int TX[30];
-    int top;
+    int top;       // 该栈的栈顶
 } symbol_scope_TX;
 
 struct ASTNode *mknode(int num, int kind, int pos, ...);

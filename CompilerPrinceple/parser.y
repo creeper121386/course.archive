@@ -11,6 +11,7 @@ extern FILE *yyin;
 int yylex();
 void yyerror(const char* fmt, ...);
 void display(struct ASTNode *,int);
+void semantic_Analysis0(struct ASTNode *T);
 %}
 
 %union {
@@ -58,10 +59,10 @@ void display(struct ASTNode *,int);
 
 %%
 // for exp1: 
-// program: ExtDefList    {printf("\n\033[1;32m==============\nProgram start:\n==============\n\033[0m\n语法树根节点Root\n");display($1,0);}     //显示语法树,语义分析
+// program: ExtDefList    {printf("\n\033[1;32m══════════════\nProgram start:\n══════════════\n\033[0m\n语法树根节点Root\n");display($1,0);}     //显示语法树,语义分析
 
 // for exp2:
-program: ExtDefList    {printf("\n\033[1;32m==============\nProgram start:\n==============\n\033[0m\n");display($1,0);}     //显示语法树,语义分析
+program: ExtDefList    {printf("\n\033[1;32m═══════════════\nAnalysis start:\n═══════════════\n\033[0m\n");semantic_Analysis0($1);}     //显示语法树,语义分析
          ; 
 ExtDefList: {$$=NULL;}
           | ExtDef ExtDefList {$$=mknode(2,EXT_DEF_LIST,yylineno,$1,$2);}   //每一个EXTDEFLIST的结点，其第1棵子树对应一个外部变量声明或函数
@@ -206,7 +207,8 @@ int main(int argc, char *argv[]){
 	yyin=fopen(argv[1],"r");
 	if (!yyin) return 0;
 	yylineno=1;
-        printf("\033[1;32m=======\nTokens:\n=======\n\033[0m");
+
+        printf("\033[1;32m═══════\nTokens:\n═══════\n\033[0m");
 	yyparse();
 	return 0;
 	}

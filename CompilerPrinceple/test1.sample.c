@@ -27,7 +27,7 @@ int function(int param1, int param2)
 
 int main()
 {
-    int anotherArray = [ 2, 3, 3 ];
+    int array2 = [ 2, 3, 3 ];
     int array2d[2][2] = [ [ 1, 2 ], [ 3, 4 ] ];
     int i = 0;
     // declaration at the beginning of code block.
@@ -35,7 +35,7 @@ int main()
     string s = "wow! you can assign struct directly!";
     s = "now I have new value.";
 
-    anotherArray[2] = 233;
+    array2[2] = 233;
     mystruct.member1 = 0;
     mystruct.member2 = "ohhhhhhhhh!!!!!!";
 
