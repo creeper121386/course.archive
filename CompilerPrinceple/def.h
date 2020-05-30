@@ -20,6 +20,8 @@ struct opn
         int const_int;     //整常数值，立即数
         float const_float; //浮点常数值，立即数
         char const_char;   //字符常数值，立即数
+        char const_string[33];
+        char const_struct[33];
         char id[33];       //变量或临时变量的别名或标号字符串
     };
     int level;  //变量的层号，0表示是全局变量，数据保存在静态数据区
@@ -74,6 +76,8 @@ struct symbol
     char alias[10]; //别名，为解决嵌套层次使用
     char flag;      //符号标记，函数：'F'  变量：'V'   参数：'P'  临时变量：'T'
     char offset;    //外部变量和局部变量在其静态数据区或活动记录中的偏移量，
+
+    // char members[32][32]      // 结构体成员名
                     //或记录函数活动记录大小，目标代码生成时使用
     //函数入口等实验可能会用到的属性...
 };
@@ -99,3 +103,5 @@ void semantic_Analysis(struct ASTNode *T);
 void boolExp(struct ASTNode *T);
 void Exp(struct ASTNode *T);
 void objectCode(struct codenode *head);
+
+void display(struct ASTNode *,int);

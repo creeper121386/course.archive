@@ -17,10 +17,41 @@ struct ASTNode *mknode(int num, int kind, int pos, ...)
     return T;
 }
 
+char *map_type(char *type_str, int code)
+{
+    switch (code)
+    {
+    case INT:
+        // return "int";
+        strcpy(type_str, "int");
+        break;
+    case FLOAT:
+        // return "float";
+        strcpy(type_str, "float");
+        break;
+    case CHAR:
+        // return "char";
+        strcpy(type_str, "char");
+        break;
+    case STRING:
+        // return "string";
+        strcpy(type_str, "string");
+        break;
+
+    default:
+        // return "unknown";
+        strcpy(type_str, "unknown");
+        break;
+    }
+
+    return type_str;
+}
+
 void display(struct ASTNode *T, int indent)
 { //对抽象语法树的先根遍历
     int i = 1;
     struct ASTNode *T0;
+    char type_str[10];
     if (T)
     {
         switch (T->kind)
@@ -30,6 +61,7 @@ void display(struct ASTNode *T, int indent)
             display(T->ptr[1], indent); //显示该外部定义列表中的其它外部定义
             break;
         case EXT_VAR_DEF:
+            // 左子树为TYPE,右子树为变量(ExtDecList)
             printf("%*c外部变量定义：(%d)\n", indent, ' ', T->pos);
             display(T->ptr[0], indent + 3); //显示外部变量类型
             printf("%*c变量名：\n", indent + 3, ' ');
@@ -63,7 +95,28 @@ void display(struct ASTNode *T, int indent)
             display(T->ptr[1], indent);
             break;
         case PARAM_DEC:
-            printf("%*c类型：%s, 参数名：%s\n", indent, ' ', T->ptr[0]->type == INT ? "int" : "float", T->ptr[1]->type_id);
+            // 根据类型不同打印信息:
+            switch (T->ptr[0]->type)
+            {
+            case INT:
+                printf("%*c类型：%s, 参数名：%s\n", indent, ' ', "int", T->ptr[1]->type_id);
+                break;
+            case FLOAT:
+                printf("%*c类型：%s, 参数名：%s\n", indent, ' ', "float", T->ptr[1]->type_id);
+                break;
+            case CHAR:
+                printf("%*c类型：%s, 参数名：%s\n", indent, ' ', "char", T->ptr[1]->type_id);
+                break;
+            case STRING:
+                printf("%*c类型：%s, 参数名：%s\n", indent, ' ', "string", T->ptr[1]->type_id);
+                break;
+            case STRUCT:
+                printf("%*c类型：%s, 参数名：%s\n", indent, ' ', "struct", T->ptr[1]->type_id);
+                break;
+            default:
+                printf("%*c类型：%s, 参数名：%s\n", indent, ' ', "unknown", T->ptr[1]->type_id);
+                break;
+            }
             break;
         case EXP_STMT:
             printf("%*c表达式语句：(%d)\n", indent, ' ', T->pos);
@@ -74,10 +127,11 @@ void display(struct ASTNode *T, int indent)
             display(T->ptr[0], indent + 3);
             break;
         case COMP_STM:
+            printf("%*c-----------------\n", indent, ' ');
             printf("%*c复合语句：(%d)\n", indent, ' ', T->pos);
-            printf("%*c变量定义：\n", indent + 3, ' ');
+            printf("%*c变量定义部分：\n", indent + 3, ' ');
             display(T->ptr[0], indent + 6); //显示定义部分
-            printf("%*c其他语句：\n", indent + 3, ' ');
+            printf("%*c其他语句部分：\n", indent + 3, ' ');
             display(T->ptr[1], indent + 6); //显示语句部分
             break;
         case STM_LIST:
@@ -148,6 +202,7 @@ void display(struct ASTNode *T, int indent)
             display(T->ptr[2], indent + 6); //显示else子句
             break;
         case DEF_LIST:
+            printf("deflist\n");
             display(T->ptr[0], indent); //显示该局部变量定义列表中的第一个
             display(T->ptr[1], indent); //显示其它局部变量定义
             break;
@@ -157,27 +212,54 @@ void display(struct ASTNode *T, int indent)
             display(T->ptr[1], indent + 3); //显示该定义的全部变量名
             break;
         case DEC_LIST:
+            // 局部变量定义列表: 例如 int a, b, c=1;
             printf("%*c变量名：\n", indent, ' ');
             T0 = T;
             while (T0)
             {
-                if (T0->ptr[0]->kind == ID)
-                    printf("%*c %s\n", indent + 6, ' ', T0->ptr[0]->type_id);
-                else if (T0->ptr[0]->kind == ASSIGNOP)
+                if (T0->ptr[0]->kind == ASSIGNOP)
+                // 带初始化表达式的
                 {
                     printf("%*c %s ASSIGNOP\n ", indent + 6, ' ', T0->ptr[0]->ptr[0]->type_id);
                     display(T0->ptr[0]->ptr[1], indent + strlen(T0->ptr[0]->ptr[0]->type_id) + 7); //显示初始化表达式
                 }
+                else
+                    // 不带初始化表达式
+                    display(T0->ptr[0], indent + strlen(T0->ptr[0]->type_id)); //显示初始化表达式
+                // printf("%*c %s\n", indent + 6, ' ', T0->ptr[0]->type_id);
                 T0 = T0->ptr[1];
             }
             break;
-        case ARRAY_LIST:
+        case ARRAY_DEC: // int array
+            printf("%*c数组名：%s\n", indent, ' ', T->type_id);
+            display(T->ptr[0], indent);
+            display(T->ptr[1], indent);
+            break;
+        // case LAST_ARRAY_DIM:        // 例如[10]
+        //     printf("%*c数组长度：%d\n", indent, ' ', T->type_int);
+        //     // display(T->ptr[0], indent);
+        //     // display(T->ptr[1], indent);
+        //     break;
+        // case ARRAY_DIMS:        // 例如[10][20]
+        //     //  结构:
+        //     //       ARRAY_DIMS (type_int = 维数1)
+        //     //       /        \
+        //     //   NULL      ARRAY_DIMS  (type_int = 维数2)
+        //     //            /          \
+        //     //         NULL      LAST_ARRAY_DIM  (type_int = 维数3)
+
+        //     printf("%*c维度：%d\n", indent, ' ', T->type_int);
+        //     display(T->ptr[0], indent);
+        //     break;
+        case ARRAY_DIMS: // 例如[10][20]
+            printf("%*c(ARRAY_DIMS)数组维度\n", indent, ' ');
             display(T->ptr[0], indent);
             display(T->ptr[1], indent);
             break;
         case ARRAY_ID:
-            printf("%*c数组访问：(%d)\n", indent, ' ', T->pos);
-            display(T->ptr[0], indent);
+            printf("%*c(ARRAY_ID)数组访问：(%d)\n", indent, ' ', T->pos);
+            // printf("%*c访问下标：\n", indent, ' ');
+            display(T->ptr[0], indent + 3);
             break;
         case STRUCT_DEF:
             printf("%*c结构定义：(%d)\n", indent, ' ', T->pos);
@@ -188,7 +270,8 @@ void display(struct ASTNode *T, int indent)
             printf("%*c结构名：%s\n", indent, ' ', T->struct_name);
             break;
         case ID:
-            printf("%*cID： %s\n", indent, ' ', T->type_id);
+            // printf("\033[0;32m%*cID： %s, type: %s(%d)\n\033[0m", indent, ' ', T->type_id, map_type(type_str, T->type), T->type);
+            printf("\033[0;32m%*cID： %s\n\033[0m", indent, ' ', T->type_id);
             break;
         case INT:
             printf("%*cINT：%d\n", indent, ' ', T->type_int);
@@ -227,7 +310,7 @@ void display(struct ASTNode *T, int indent)
             display(T->ptr[1], indent + 3);
             break;
         case ACCESS_MEMBER:
-            printf("%*c结构体访问：\n", indent, ' ');
+            printf("%*c(ACCESS_MEMBER) 结构体访问：\n", indent, ' ');
             display(T->ptr[0], indent + 3);
             printf("%*c访问成员变量：%s\n", indent + 3, ' ', T->type_id);
             break;
