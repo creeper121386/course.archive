@@ -69,7 +69,7 @@
 #include "string.h"
 #include "def.h"
 
-#define SHOW_AST 1
+#define SHOW_AST 0
 #define DO_SEMANTIC 1
 
 extern int yylineno;

@@ -5,7 +5,7 @@
 block comment over multiple lines
 */
 
-int a, b, c; // line comment after code
+int 1a, b, c; // line comment after code
 int d = 1;
 float e, f;
 

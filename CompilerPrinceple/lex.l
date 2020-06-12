@@ -25,7 +25,7 @@ typedef union {
 %option yylineno
 
 ID                  [A-Za-z_][A-Za-z0-9_]*
-WRONGID				[0-9]+[A-Za-z][A-Za-z0-9]*
+WRONGID				([0-9]+[A-Za-z_&*^%$#~@*0-9]|[A-Za-z&*^%$#~@*]*)
 INT                 [0-9]+
 FLOAT               ([0-9]*\.[0-9]+)|([0-9]+\.)
 CHAR                \'(\\.|[^'\\])\'        
@@ -89,7 +89,7 @@ LINE_COMMENT        \/\/[^\n]*
 ">"|"<"|">="|"<="|"=="|"!="   	{if(SHOW_TOKENS) printf("%-11s  │  %-10s  at (%d, %d)\n", "RELOP", yytext, yylineno, yycolumn); strcpy(yylval.type_id, yytext);;return RELOP;}
 \n            					{if(SHOW_TOKENS) printf("%-11s  │  %-10s  at (%d, %d)\n", "ENDL", "\\n", yylineno, yycolumn); yycolumn=1;}   
 [ \r\t]         				{}   
-{WRONGID}       				{printf("\033[0;31mERR: ID can't start with number. unexpected: %s in (%d, %d)\n\033[0m", yytext, yylineno, yycolumn); return WRONGID;}
+{WRONGID}       				{printf("\033[0;31mERR: ID format wrong. unexpected: %s in (%d, %d)\n\033[0m", yytext, yylineno, yycolumn); return WRONGID;}
 .       						{printf("Error type A :Mysterious character \"%s\"\n\t at Line %d\n",yytext,yylineno);}
 %%
 

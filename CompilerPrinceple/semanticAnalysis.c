@@ -1361,6 +1361,7 @@ void semantic_Analysis0(struct ASTNode *T)
     semantic_Analysis(T);
 
     // generate IR:
-    // prnIR(T->code);
+    T->offset = 0;
+    prnIR(T->code);
     // objectCode(T->code);
 }
